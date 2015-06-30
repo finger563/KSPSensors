@@ -32,9 +32,6 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="FerramAerospaceResearch">
-      <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\GameData\FerramAerospaceResearch\Plugins\FerramAerospaceResearch.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,11 +41,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="KSPAPIExtensions">
-      <HintPath>..\GameData\KSPSensors\Plugins\KSPAPIExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="kRPC">
-      <HintPath>..\GameData\KSPSensors\Plugins\kRPC.dll</HintPath>
+      <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\GameData\kRPC\kRPC.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

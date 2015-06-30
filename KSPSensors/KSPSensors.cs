@@ -8,92 +8,84 @@ using KSP;
 using KRPC.Service;
 using KRPC.Service.Attributes;
 
-using KSPAPIExtensions;
-using FerramAerospaceResearch;
-
 namespace KSPSensors
 {
+	[KRPCClass (Service = "Sensors")]
+	public class AltitudeSensor : PartModule 
+	{
+		[KRPCProperty]
+		public bool IsOperational {
+			get;
+			set;
+		}
+
+		[KRPCProperty]
+		public double NoiseMargin {
+			get;
+			set;
+		}
+
+		[KRPCProperty]
+		public double Value {
+			get {
+				if (IsOperational)
+					return vessel.altitude + Random.value * NoiseMargin * vessel.altitude;
+				else
+					return 0;
+			}
+		}
+	}
+	[KRPCClass (Service = "Sensors")]
+	public class GPSSensor : PartModule 
+	{
+		[KRPCProperty]
+		public bool IsOperational {
+			get;
+			set;
+		}
+
+		[KRPCProperty]
+		public double NoiseMargin {
+			get;
+			set;
+		}
+
+		[KRPCProperty]
+		public System.Collections.Generic.IList<double> Value {
+			get {
+				System.Collections.Generic.IList<double> coords = new List<double>();
+				coords.Add (0);
+				coords.Add (0);
+				if (IsOperational) {
+					coords [0] = (double)(vessel.latitude + Random.value * NoiseMargin * vessel.latitude);
+					coords [1] = (double)(vessel.longitude + Random.value * NoiseMargin * vessel.longitude);
+				}
+				return coords;
+			}
+		}
+	}
 	[KRPCService (GameScene = GameScene.Flight)]
 	public static class Sensors 
 	{
-		[KRPCClass]
-		public class AltitudeSensor : PartModule 
+		public static System.Collections.Generic.IList<AltitudeSensor> altSensors = new List<AltitudeSensor>();
+		public static System.Collections.Generic.IList<GPSSensor> gpsSensors = new List<GPSSensor>();
+		[KRPCProcedure]
+		public static AltitudeSensor CreateAltitudeSensor(double noise)
 		{
-			[KRPCProperty]
-			public bool IsOperational {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public double NoiseMargin {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public double Value {
-				get {
-					if (IsOperational)
-						return vessel.altitude + Random.value * NoiseMargin * vessel.altitude;
-					else
-						return 0;
-				}
-			}
+			AltitudeSensor sensor = new AltitudeSensor ();
+			sensor.NoiseMargin = noise;
+			sensor.IsOperational = true;
+			altSensors.Add (sensor);
+			return sensor;
 		}
-		[KRPCClass]
-		public class AirSpeedSensor : PartModule 
+		[KRPCProcedure]
+		public static GPSSensor CreateGPSSensor(double noise)
 		{
-			[KRPCProperty]
-			public bool IsOperational {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public double NoiseMargin {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public double Value {
-				get {
-					if (IsOperational)
-						return vessel.speed + Random.value * NoiseMargin * vessel.speed;
-					else
-						return 0;
-				}
-			}
-		}
-		[KRPCClass]
-		public class GPSSensor : PartModule 
-		{
-			[KRPCProperty]
-			public bool IsOperational {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public double NoiseMargin {
-				get;
-				set;
-			}
-
-			[KRPCProperty]
-			public System.Collections.Generic.IList<double> Value {
-				get {
-					System.Collections.Generic.IList<double> coords = new List<double>();
-					coords.Add (0);
-					coords.Add (0);
-					if (IsOperational) {
-						coords [0] = vessel.latitude + Random.value * NoiseMargin * vessel.latitude;
-						coords [1] = vessel.longitude + Random.value * NoiseMargin * vessel.longitude;
-					}
-					return coords;
-				}
-			}
+			GPSSensor sensor = new GPSSensor ();
+			sensor.NoiseMargin = noise;
+			sensor.IsOperational = true;
+			gpsSensors.Add (sensor);
+			return sensor;
 		}
 	}
 }
