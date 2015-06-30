@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System;
+using System.Globalization;
 
 using UnityEngine;
 using KSP;
@@ -28,8 +30,28 @@ namespace KSPSensors
 		[KRPCProperty]
 		public double Value {
 			get {
-				if (IsOperational)
-					return vessel.altitude + Random.value * NoiseMargin * vessel.altitude;
+
+				Vessel vessel = FlightGlobals.ActiveVessel;
+				//check if sourceVessel has a gps receiver partModule
+				Part sensorPart = vessel.Parts.Find(t => t.name == "kspSensorPart");
+
+				if (!sensorPart || !IsOperational){
+					IsOperational = false;
+					return 0;
+				}
+
+				//Debug.Log("found kspSensorPart");
+				if(sensorPart.Modules.Contains("KSPSensors")) {
+					PartModule sensorModule = sensorPart.Modules["KSPSensors"];
+
+					//Debug.Log("Found KerbalGPS Module in ReceiverPart");
+					BaseField altitudeField = sensorModule.Fields["gdAltitude"];
+
+					//Debug.Log("Found num sats field: guiName=" + numSatField.guiName);
+					//Debug.Log("checking value(host=receiverModule)=" + numSatField.GetValue(receiverModule));
+					double alt = double.Parse (altitudeField.GetValue (sensorModule).ToString ());
+					return alt + UnityEngine.Random.value * NoiseMargin * alt;
+				} //endif module found
 				else
 					return 0;
 			}
@@ -57,8 +79,8 @@ namespace KSPSensors
 				coords.Add (0);
 				coords.Add (0);
 				if (IsOperational) {
-					coords [0] = (double)(vessel.latitude + Random.value * NoiseMargin * vessel.latitude);
-					coords [1] = (double)(vessel.longitude + Random.value * NoiseMargin * vessel.longitude);
+					coords [0] = (double)(vessel.latitude + UnityEngine.Random.value * NoiseMargin * vessel.latitude);
+					coords [1] = (double)(vessel.longitude + UnityEngine.Random.value * NoiseMargin * vessel.longitude);
 				}
 				return coords;
 			}
