@@ -54,7 +54,7 @@ class GPS_Calculations
 
     private int[,] guCombinations = new int[7, 3] { { 0, 1, 2 }, { 1, 2, 3 }, { 0, 1, 3 }, { 0, 1, 4 }, { 1, 2, 4 }, { 1, 3, 4 }, { 2, 3, 4 } };
     private bool gyGPSCalculationsInitialised = false;
-    private KerbalGPS clsLocalKerbalGPSReference = null;
+    private KSPSensor clsLocalKerbalGPSReference = null;
     private float gfFilteredAltitude = 0.0f;
     private float gfFilteredError = 0.0f;
     private string strLat;
@@ -108,7 +108,7 @@ class GPS_Calculations
      
     *********************************************************************************************/
 
-    public void Initialise(KerbalGPS clsKerbalGPSReference, string strGNSSacronym, string strSBASacronym)
+    public void Initialise(KSPSensor clsKerbalGPSReference, string strGNSSacronym, string strSBASacronym)
     {
         if (!gyGPSCalculationsInitialised)
         {

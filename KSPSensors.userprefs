@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="KSPSensors/KSPSensors.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="KSPSensors/KerbalGPS_Main.cs">
     <Files>
-      <File FileName="KSPSensors/KSPSensors.cs" Line="20" Column="20" />
+      <File FileName="KSPSensors/KerbalGPS_Main.cs" Line="17" Column="17" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

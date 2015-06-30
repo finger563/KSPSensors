@@ -1,39 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////////////////////
-////
-////   KerbalGPS_Main.cs
-////
-////   Kerbal Space Program GPS math library
-////
-////   (C) Copyright 2012-2013, Kevin Wilder (a.k.a. PakledHostage)
-////
-////   This code is licensed under the Attribution-NonCommercial-ShareAlike 3.0 (CC BY-NC-SA 3.0) 
-////   creative commons license. See <http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode> 
-////   for full details.
-////
-////   Attribution — You are free to modify this code, so long as you mention that the resulting
-////                 work is based upon or adapted from this library. This KerbalGPS_Main.cs
-////                 code library is the original work of Kevin Wilder.
-////
-////   Non-commercial - You may not use this work for commercial purposes.
-////
-////   Share Alike — If you alter, transform, or build upon this work, you may distribute the 
-////                 resulting work only under the same or similar license to the CC BY-NC-SA 3.0
-////                 license.
-////
-////
-/////////////////////////////////////////////////////////////////////////////////////////////
-////
-////   Revision History
-////
-/////////////////////////////////////////////////////////////////////////////////////////////
-////
-////   Created November 10th, 2012
-////
-////   Revised October 26, 2013 by Kevin Wilder to incorporate changes suggested by m4v.
-////
-////
-/////////////////////////////////////////////////////////////////////////////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -43,13 +7,25 @@ using UnityEngine;
 using KRPC.Service;
 using KRPC.Service.Attributes;
 
-[KRPCService (GameScene = GameScene.Flight)]
-public static class GPSService
+[KRPCService (GameScene=GameScene.Flight)]
+public static class Sensors 
 {
+	[KRPCProcedure]
+	public static System.Collections.Generic.IList<KSPSensor> GetSensors ()
+	{
+		List<KSPSensor> sensors = new List<KSPSensor> ();
+		Vessel vessel = FlightGlobals.ActiveVessel;
+		List<Part> partsList = vessel.Parts.FindAll (t => t.Modules.Contains ("KSPSensor"));
+		foreach (Part p in partsList) {
+			KSPSensor sensor = (KSPSensor)p.Modules.GetModule(0);
+			sensors.Add (sensor);
+		}
+		return sensors;
+	}
 }
 
-[KRPCClass (Service = "GPSService")]
-public class KerbalGPS : PartModule
+[KRPCClass (Service = "Sensors")]
+public class KSPSensor : PartModule
 {
     /////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -69,11 +45,18 @@ public class KerbalGPS : PartModule
     [KSPField(isPersistant = false, guiActive = true, guiName = "Position")]
     public string gsPosition;
 
-	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude")][KRPCProperty]
-    public string gsAltitude 
-	{
-		get;set;
+	[KRPCProperty]
+	public string Position {
+		get {
+			return gsPosition;
+		}
+		set {
+			gsPosition = value;
+		}
 	}
+
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude")]
+	public string gsAltitude;
 
     [KSPField(isPersistant = false, guiActive = true, guiName = "Visible Satellites")]
     public UInt16 guNumSats;
@@ -83,6 +66,19 @@ public class KerbalGPS : PartModule
 
     public List<string> GNSSSatelliteNames = new List<string>();
     public List<Guid> GNSSSatelliteIDs = new List<Guid>();
+
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Test Property")]
+	public double test_prop;
+
+	[KRPCProperty]
+	public double TestProperty {
+		get {
+			return test_prop;
+		}
+		set {
+			test_prop = value;
+		}
+	}
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////
