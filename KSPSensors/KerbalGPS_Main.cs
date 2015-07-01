@@ -45,16 +45,6 @@ public class KSPSensor : PartModule
     [KSPField(isPersistant = false, guiActive = true, guiName = "Position")]
     public string gsPosition;
 
-	[KRPCProperty]
-	public string Position {
-		get {
-			return gsPosition;
-		}
-		set {
-			gsPosition = value;
-		}
-	}
-
 	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude")]
 	public string gsAltitude;
 
@@ -70,6 +60,9 @@ public class KSPSensor : PartModule
 	[KSPField(isPersistant = false, guiActive = true, guiName = "Test Property")]
 	public double test_prop;
 
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Operational")]
+	public bool operational;
+
 	[KRPCProperty]
 	public double TestProperty {
 		get {
@@ -80,6 +73,45 @@ public class KSPSensor : PartModule
 		}
 	}
 
+	[KRPCProperty]
+	public bool Operational
+	{
+		get {
+			return operational;
+		}
+		set {
+			operational = value;
+		}
+	}
+
+	[KRPCProperty]
+	public System.Collections.Generic.IList<double> PositionVector {
+		get {
+			List<double> retList = new List<double> ();
+			retList.Add (gfPosition.x);
+			retList.Add (gfPosition.y);
+			retList.Add (gfPosition.z);
+			return retList;
+		}
+	}
+
+	[KRPCProperty]
+	public System.Collections.Generic.IList<double> LatLonAlt {
+		get {
+			List<double> retList = new List<double> ();
+			retList.Add ((double)vessel.mainBody.GetLatitude (gfPosition));
+			retList.Add ((double)vessel.mainBody.GetLongitude(gfPosition));
+			retList.Add ((double)vessel.mainBody.GetAltitude(gfPosition));
+			return retList;
+		}
+	}
+
+	[KRPCProperty]
+	public double Speed {
+		get {
+			return 0.0;
+		}
+	}
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     //
@@ -251,6 +283,7 @@ public class KSPSensor : PartModule
                         // Use the built-in GetLatitude and GetLongitude functions to compute the latitude and longitude
                         gfOrigLat = (float)vessel.mainBody.GetLatitude(gfPosition);
                         gfOrigLon = (float)vessel.mainBody.GetLongitude(gfPosition);
+						gfFilteredAltitude = (float)vessel.mainBody.GetAltitude (gfPosition);
 
                         gsLat = clsGPSMath.Lat_to_String(gfOrigLat);
                         gsLon = clsGPSMath.Lon_to_String(gfOrigLon);
