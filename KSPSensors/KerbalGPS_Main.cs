@@ -231,6 +231,8 @@ public class KSPSensor : PartModule
         gyReceiverOn = true;
         gbDisplayMode = MODE_GPS_POSITION;
         gLastSVCheckTime = DateTime.Now;
+
+		operational = true;
         
         base.OnAwake();
     }
@@ -558,6 +560,7 @@ public class KSPSensor : PartModule
 
     private void drawGUI()
     {
+		return;
         try
         {
             if ((this.part.State != PartStates.DEAD) && (this.vessel.isActiveVessel))

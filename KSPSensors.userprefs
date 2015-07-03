@@ -1,8 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="KSPSensors/KerbalGPS_Main.cs">
     <Files>
-      <File FileName="KSPSensors/KerbalGPS_Main.cs" Line="31" Column="31" />
+      <File FileName="KSPSensors/KerbalGPS_Main.cs" Line="10" Column="10" />
       <File FileName="KSPSensors/Properties/AssemblyInfo.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
