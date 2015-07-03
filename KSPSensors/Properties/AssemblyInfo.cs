@@ -5,15 +5,15 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FARKOSData")]
+[assembly: AssemblyTitle("KSPSensors")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FARKOSData")]
-[assembly: AssemblyCopyright("Copyright © Matt Thiffault 2015")]
+[assembly: AssemblyProduct("KSPSensors")]
+[assembly: AssemblyCopyright("Copyright © William Emfinger 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: KSPAssembly("FARKOSData", 0, 4)]
+[assembly: KSPAssembly("KSPSensors", 0, 1)]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -33,6 +33,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.4.1.0")]
-[assembly: AssemblyFileVersion("0.4.1.0")]
-[assembly: KSPAssemblyDependency("FerramAerospaceResearch", 0, 15)]
+[assembly: AssemblyVersion("0.1.0")]
+[assembly: AssemblyFileVersion("0.1.0")]

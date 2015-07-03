@@ -7,7 +7,7 @@
     <ProjectGuid>{A4BE05EA-FF73-4CEC-AC76-5DDCB4A39794}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FARKOSData</RootNamespace>
+    <RootNamespace>KSPSensors</RootNamespace>
     <AssemblyName>KSPSensors</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,6 +31,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -40,6 +41,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="kRPC">
       <HintPath>..\..\..\SteamLibrary\steamapps\common\Kerbal Space Program\GameData\kRPC\kRPC.dll</HintPath>
