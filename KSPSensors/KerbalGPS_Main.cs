@@ -29,19 +29,21 @@ public static class Sensors
 		Vessel vessel = FlightGlobals.ActiveVessel;
 		List<Part> partsList = vessel.Parts.FindAll (t => t.Modules.Contains ("KSPSensor"));
 		foreach (Part p in partsList) {
-			string sensor = p.Modules[0].tag;
-			tags.Add (sensor);
+			KSPSensor sensor = (KSPSensor)p.Modules[0];
+			string sTag = sensor.sensorTag;
+			tags.Add (sTag);
 		}
 		return tags;
 	}
 	[KRPCProcedure]
-	public static KSPSensor GetSensor (string sensorTag)
+	public static KSPSensor GetSensor (string sTag)
 	{
 		Vessel vessel = FlightGlobals.ActiveVessel;
 		List<Part> partsList = vessel.Parts.FindAll (t => t.Modules.Contains ("KSPSensor"));
 		foreach (Part p in partsList) {
-			if (p.tag == sensorTag)
-				return (KSPSensor)p.Modules.GetModule (0);
+			KSPSensor s = (KSPSensor)p.Modules [0];
+			if (s.sensorTag == sTag)
+				return s;
 		}
 		throw new ArgumentException ("No such tag");
 	}
@@ -81,8 +83,15 @@ public class KSPSensor : PartModule
     public List<Guid> GNSSSatelliteIDs = new List<Guid>();
 
 	private TagWindow typingWindow;
-	[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Tag")]
-	new public string tag = "KSPSensor";
+	[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Sensor Tag")]
+	public string sensorTag = "KSPSensor";
+
+	[KRPCProperty]
+	public string SensorTag
+	{
+		get { return sensorTag; }
+		set { sensorTag = value; }
+	}
 
 	[KSPEvent(guiActive = true,
 		guiActiveEditor = true,
@@ -91,22 +100,15 @@ public class KSPSensor : PartModule
 	{
 		if (typingWindow != null)
 			typingWindow.Close();
-		if (HighLogic.LoadedSceneIsEditor)
-		{
-			EditorFacility whichEditor = EditorLogic.fetch.ship.shipFacility;
-			var formattedString = string.Format("The {0} requires an upgrade to assign name tags", whichEditor);
-			ScreenMessages.PostScreenMessage(formattedString, 6, ScreenMessageStyle.UPPER_CENTER);
-			return;
-		}
-		GameObject gObj = new GameObject("tag", typeof(TagWindow));
+		GameObject gObj = new GameObject("sensorTag", typeof(TagWindow));
 		DontDestroyOnLoad(gObj);
 		typingWindow = (TagWindow)gObj.GetComponent(typeof(TagWindow));
-		typingWindow.Invoke(this, tag);
+		typingWindow.Invoke(this, sensorTag);
 	}
 
 	public void TypingDone(string newValue)
 	{
-		tag = newValue;
+		sensorTag = newValue;
 		TypingCancel();
 	}
 
