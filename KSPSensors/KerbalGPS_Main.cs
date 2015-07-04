@@ -22,6 +22,29 @@ public static class Sensors
 		}
 		return sensors;
 	}
+	[KRPCProcedure]
+	public static System.Collections.Generic.IList<string> GetSensorTags ()
+	{
+		List<string> tags = new List<string> ();
+		Vessel vessel = FlightGlobals.ActiveVessel;
+		List<Part> partsList = vessel.Parts.FindAll (t => t.Modules.Contains ("KSPSensor"));
+		foreach (Part p in partsList) {
+			string sensor = p.Modules[0].tag;
+			tags.Add (sensor);
+		}
+		return tags;
+	}
+	[KRPCProcedure]
+	public static KSPSensor GetSensor (string sensorTag)
+	{
+		Vessel vessel = FlightGlobals.ActiveVessel;
+		List<Part> partsList = vessel.Parts.FindAll (t => t.Modules.Contains ("KSPSensor"));
+		foreach (Part p in partsList) {
+			if (p.tag == sensorTag)
+				return (KSPSensor)p.Modules.GetModule (0);
+		}
+		throw new ArgumentException ("No such tag");
+	}
 }
 
 [KRPCClass (Service = "Sensors")]
@@ -57,20 +80,50 @@ public class KSPSensor : PartModule
     public List<string> GNSSSatelliteNames = new List<string>();
     public List<Guid> GNSSSatelliteIDs = new List<Guid>();
 
-	[KSPField(isPersistant = false, guiActive = true, guiName = "Test Property")]
-	public double test_prop;
+	private TagWindow typingWindow;
+	[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Tag")]
+	new public string tag = "KSPSensor";
 
-	[KSPField(isPersistant = false, guiActive = true, guiName = "Operational")]
-	public bool operational;
+	[KSPEvent(guiActive = true,
+		guiActiveEditor = true,
+		guiName = "Change Tag")]
+	public void PopupTagRename()
+	{
+		if (typingWindow != null)
+			typingWindow.Close();
+		if (HighLogic.LoadedSceneIsEditor)
+		{
+			EditorFacility whichEditor = EditorLogic.fetch.ship.shipFacility;
+			var formattedString = string.Format("The {0} requires an upgrade to assign name tags", whichEditor);
+			ScreenMessages.PostScreenMessage(formattedString, 6, ScreenMessageStyle.UPPER_CENTER);
+			return;
+		}
+		GameObject gObj = new GameObject("tag", typeof(TagWindow));
+		DontDestroyOnLoad(gObj);
+		typingWindow = (TagWindow)gObj.GetComponent(typeof(TagWindow));
+		typingWindow.Invoke(this, tag);
+	}
+
+	public void TypingDone(string newValue)
+	{
+		tag = newValue;
+		TypingCancel();
+	}
+
+	public void TypingCancel()
+	{
+		typingWindow.Close();
+		typingWindow = null;
+	}
+
+	[KSPField(isPersistant = true, guiActive = true, guiName = "Operational")]
+	public bool operational = true;
 
 	[KRPCProperty]
-	public double TestProperty {
-		get {
-			return test_prop;
-		}
-		set {
-			test_prop = value;
-		}
+	public string Tag
+	{
+		get { return tag; }
+		set { tag = value; }
 	}
 
 	[KRPCProperty]
