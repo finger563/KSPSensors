@@ -84,8 +84,8 @@ public class KSPSensor : PartModule
 
 	private TagWindow typingWindow;
 	[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Sensor Tag")]
-	public string sensorTag = "KSPSensor";
 
+	public string sensorTag = "KSPSensor";
 	[KRPCProperty]
 	public string SensorTag
 	{
@@ -142,8 +142,12 @@ public class KSPSensor : PartModule
 	[KRPCProperty]
 	public System.Collections.Generic.IList<double> PositionVector {
 		get {
+			if (!operational)
+				throw new InvalidOperationException ("The sensor is no longer operational.");
 			List<double> retList = new List<double> ();
 			Vector3 pos = part.Rigidbody.position;
+			if (guNumSats >= 4)
+				pos = gfPosition;
 			retList.Add (pos.x);
 			retList.Add (pos.y);
 			retList.Add (pos.z);
@@ -154,8 +158,12 @@ public class KSPSensor : PartModule
 	[KRPCProperty]
 	public System.Collections.Generic.IList<double> LatLonAlt {
 		get {
+			if (!operational)
+				throw new InvalidOperationException ("The sensor is no longer operational.");
 			List<double> retList = new List<double> ();
 			Vector3 pos = part.Rigidbody.position;
+			if (guNumSats >= 4)
+				pos = gfPosition;
 			retList.Add ((double)vessel.mainBody.GetLatitude (pos));
 			retList.Add ((double)vessel.mainBody.GetLongitude(pos));
 			retList.Add ((double)vessel.mainBody.GetAltitude(pos));
