@@ -84,8 +84,8 @@ public class KSPSensor : PartModule
 
 	private TagWindow typingWindow;
 	[KSPField(isPersistant = true, guiActive = true, guiActiveEditor = true, guiName = "Sensor Tag")]
-
 	public string sensorTag = "KSPSensor";
+
 	[KRPCProperty]
 	public string SensorTag
 	{
@@ -122,17 +122,34 @@ public class KSPSensor : PartModule
 	public bool operational = true;
 
 	[KRPCProperty]
-	public string Tag
-	{
-		get { return tag; }
-		set { tag = value; }
-	}
-
-	[KRPCProperty]
 	public bool Operational
 	{
 		get { return operational; }
-		set { operational = value; }
+	}
+	[KRPCMethod]
+	public void Fail()
+	{
+		FailSensor ();
+	}
+	[KRPCMethod]
+	public void Repair()
+	{
+		RepairSensor ();
+	}
+
+	[KSPEvent(guiActive = true, guiName = "Fail Sensor", name = "GNSS Receiver")]
+	public void FailSensor()
+	{
+		Events["RepairSensor"].active = true;
+		Events["FailSensor"].active = false;
+		operational = false;
+	}
+	[KSPEvent(guiActive = true, guiName = "Repair Sensor", name = "GNSS Receiver")]
+	public void RepairSensor()
+	{
+		Events["FailSensor"].active = true;
+		Events["RepairSensor"].active = false;
+		operational = true;
 	}
 
 	[KRPCProperty]
@@ -288,13 +305,19 @@ public class KSPSensor : PartModule
         Events["ActivateReceiver"].active = false;
         gyReceiverOn = true;
 
+		if (operational) {
+			Events ["FailSensor"].active = true;
+			Events ["RepairSensor"].active = false;
+		} else {
+			Events ["FailSensor"].active = false;
+			Events ["RepairSensor"].active = true;
+		}
+
         gyKerbalGPSInitialised = false;
         giLastVesselCount = 0;
         gyReceiverOn = true;
         gbDisplayMode = MODE_GPS_POSITION;
         gLastSVCheckTime = DateTime.Now;
-
-		operational = true;
         
         base.OnAwake();
     }
@@ -715,6 +738,13 @@ public class KSPSensor : PartModule
 
             ActivateReceiver();
 
+			if (operational) {
+				Events ["FailSensor"].active = true;
+				Events ["RepairSensor"].active = false;
+			} else {
+				Events ["FailSensor"].active = false;
+				Events ["RepairSensor"].active = true;
+			}
         }
     }
 
