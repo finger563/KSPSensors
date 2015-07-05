@@ -95,7 +95,7 @@ public class KSPSensor : PartModule
 
 	[KSPEvent(guiActive = true,
 		guiActiveEditor = true,
-		guiName = "Change Tag")]
+		guiName = "Change Sensor Tag")]
 	public void PopupTagRename()
 	{
 		if (typingWindow != null)
@@ -131,12 +131,8 @@ public class KSPSensor : PartModule
 	[KRPCProperty]
 	public bool Operational
 	{
-		get {
-			return operational;
-		}
-		set {
-			operational = value;
-		}
+		get { return operational; }
+		set { operational = value; }
 	}
 
 	[KRPCProperty]
@@ -164,8 +160,11 @@ public class KSPSensor : PartModule
 			Vector3 pos = part.Rigidbody.position;
 			if (guNumSats >= 4)
 				pos = gfPosition;
+			double longitude = (double)vessel.mainBody.GetLongitude (pos);
+			if (longitude > 180.0f)
+				longitude = longitude - 360.0f;
 			retList.Add ((double)vessel.mainBody.GetLatitude (pos));
-			retList.Add ((double)vessel.mainBody.GetLongitude(pos));
+			retList.Add (longitude);
 			retList.Add ((double)vessel.mainBody.GetAltitude(pos));
 			return retList;
 		}

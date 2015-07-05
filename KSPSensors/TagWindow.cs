@@ -119,10 +119,10 @@ public class TagWindow : MonoBehaviour
 		if (!enabled)
 			return;
 		if (HighLogic.LoadedSceneIsEditor)
-			EditorLogic.fetch.Lock (false, false, false, "KOSNameTagLock");
+			EditorLogic.fetch.Lock (false, false, false, "SensorTagLock");
 
 		GUI.skin = HighLogic.Skin;
-		GUILayout.Window (myWindowId, windowRect, DrawWindow, "KOS nametag");
+		GUILayout.Window (myWindowId, windowRect, DrawWindow, "Sensor Tag");
 
 		// Ensure that the first time the window is made, it gets keybaord focus,
 		// but allow the focus to leave the window after that:
@@ -130,7 +130,7 @@ public class TagWindow : MonoBehaviour
 		// through several initial passes before all the components are present,
 		// and if you call FocusControl on the first few passes, it has no effect.
 		if (numberOfRepaints >= 2 && !wasFocusedOnce) {
-			GUI.FocusControl ("NameTagField");
+			GUI.FocusControl ("SensorTagField");
 			wasFocusedOnce = true;
 		}
 	}
@@ -150,7 +150,7 @@ public class TagWindow : MonoBehaviour
 			}
 		}
 		GUILayout.Label (attachedModule.part.name);
-		GUI.SetNextControlName ("NameTagField");
+		GUI.SetNextControlName ("SensorTagField");
 		tagValue = GUILayout.TextField (tagValue, GUILayout.MinWidth (160f));
 
 		GUILayout.BeginHorizontal ();
@@ -174,7 +174,7 @@ public class TagWindow : MonoBehaviour
 	public void Close ()
 	{
 		if (HighLogic.LoadedSceneIsEditor)
-			EditorLogic.fetch.Unlock ("KOSNameTagLock");
+			EditorLogic.fetch.Unlock ("SensorTagLock");
 
 		SetEnabled (false);
 
