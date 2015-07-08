@@ -70,7 +70,7 @@ public class KSPSensor : PartModule
     [KSPField(isPersistant = false, guiActive = true, guiName = "Position")]
     public string gsPosition;
 
-	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude")]
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude - GNSS")]
 	public string gsAltitude;
 
     [KSPField(isPersistant = false, guiActive = true, guiName = "Visible Satellites")]
@@ -167,6 +167,15 @@ public class KSPSensor : PartModule
 			return retList;
 		}
 	}
+	
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Longitude")]
+	public double longitude;
+	
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Latitude")]
+	public double latitude;
+
+	[KSPField(isPersistant = false, guiActive = true, guiName = "Altitude")]
+	public double altitude;
 
 	[KRPCProperty]
 	public System.Collections.Generic.IList<double> LatLonAlt {
@@ -174,15 +183,9 @@ public class KSPSensor : PartModule
 			if (!operational)
 				throw new InvalidOperationException ("The sensor is no longer operational.");
 			List<double> retList = new List<double> ();
-			Vector3 pos = part.Rigidbody.position;
-			if (guNumSats >= 4)
-				pos = gfPosition;
-			double longitude = (double)vessel.mainBody.GetLongitude (pos);
-			if (longitude > 180.0f)
-				longitude = longitude - 360.0f;
-			retList.Add ((double)vessel.mainBody.GetLatitude (pos));
+			retList.Add (latitude);
 			retList.Add (longitude);
-			retList.Add ((double)vessel.mainBody.GetAltitude(pos));
+			retList.Add (altitude);
 			return retList;
 		}
 	}
@@ -411,7 +414,15 @@ public class KSPSensor : PartModule
             {
                 Initialise_KerbalGPS();
             }
-        }
+		}
+		Vector3 pos = part.Rigidbody.position;
+		if (guNumSats >= 4)
+			pos = gfPosition;
+		altitude = (double)vessel.mainBody.GetAltitude (pos);
+		latitude = (double)vessel.mainBody.GetLatitude (pos);
+		longitude = (double)vessel.mainBody.GetLongitude (pos);
+		if (longitude > 180.0f)
+			longitude = longitude - 360.0f;
 
         base.OnUpdate();
     }
